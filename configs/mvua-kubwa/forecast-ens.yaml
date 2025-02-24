@@ -1,0 +1,13 @@
+MODEL:
+  folder: "/opt/cgan/model/model-weights"
+  checkpoint: 300800
+
+INPUT:
+  folder: "/opt/cgan/forecasts/cgan-ifs-7d-ens"
+  file: "IFS_20250115_00Z.nc"
+  start_hour: 6
+  end_hour: 174
+
+OUTPUT:
+  folder: "/opt/cgan/jobs/mvua-kubwa-ens"
+  ensemble_members: 50

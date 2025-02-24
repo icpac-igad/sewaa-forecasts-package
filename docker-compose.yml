@@ -1,0 +1,217 @@
+services:
+
+  nginx:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+      args:
+        - VITE_API_URL=${CGAN_API_URL:-http://localhost/api}
+        - WEB_REPO=${CGAN_WEB_REPO:-https://github.com/icpac-igad/prime-cgan.git}
+        - ERROR_PAGES_REPO=${WEB_ERROR_PAGES_REPO:-https://github.com/jaysnm/nginx-errors.git}
+    image: ${NGINX_IMAGE_NAME:-icpac/sewaa-proxy-server}
+    container_name: ${NGINX_CNTR_NAME:-cgan-proxy}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - ${HTTP_HOST_IP:-0.0.0.0}:${HTTP_HOST_PORT:-80}:80
+      - ${HTTPS_HOST_IP:-0.0.0.0}:${HTTPS_HOST_PORT:-443}:443
+    environment:
+      - VITE_API_URL=${CGAN_API_URL:-http://localhost/api}
+      - OPENAPI_URL=${CGAN_OPENAPI_URL:-${CGAN_API_URL:-http://localhost/api}/schema.json}
+    volumes:
+      - ${WEB_SITE_CONF:-./nginx/dev-site.conf}:/etc/nginx/conf.d/site.conf
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${PUBLIC_DATA_DIR:-/opt/data}
+      - ${API_CACHE_DIR:-./data/cache}:/opt/api-cache
+      - ${NGINX_SSL_CERTS:-./data/ssl-certs}:${CERTS_DIR:-/var/srv/ssl-certs}
+
+  redis:
+    image: redis:alpine
+    container_name: ${REDIS_CNTR_NAME:-cgan-redis}
+    volumes:
+      - ${REDIS_DATA_DIR:-./data/redis}:/data
+    ports:
+      - ${REDIS_CACHE_HOST:-127.0.0.1}:${REDIS_CACHE_PORT:-6379}:6379
+
+  api:
+    image: ${API_IMAGE_NAME:-icpac/fast-cgan-api}
+    container_name: ${API_CNTR_NAME:-cgan-api}
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+      args:
+        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
+    command: gunicorn fastcgan.main:app --timeout ${GUNICORN_TIMEOUT:-300} --workers ${GUNICORN_WORKERS:-8} --worker-class uvicorn.workers.UvicornWorker --bind  0.0.0.0:8000
+    environment:
+      - BASE_URL=${API_BASE_URL:-http://127.0.0.1:8000}
+      - APP_VERSION=${APP_VERSION:-0.2.0}
+      - SUB_PATH=${SUB_PATH:-/api}
+      - OPENAPI_URL=${API_SCHEMA_URL:-/schema.json}
+      - DOCS_URL=${API_DOCS_URL:-/docs.html}
+      - REDOC_URL=${API_REDOC_URL:-/redoc.html}
+      - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - CACHE_DIR=${APP_CACHE_DIR:-/opt/app/cache}
+      - LOGS_DIR=${APP_LOGS_DIR:-/opt/app/logs}
+      - ENVIRONMENT=${ENVIRONMENT:-local}
+      - REDIS_CACHE_HOST=${REDIS_CACHE_HOST:-redis}
+      - REDIS_CACHE_PORT=${REDIS_CACHE_PORT:-6379}
+      - REDIS_QUEUE_HOST=${REDIS_CACHE_HOST:-redis}
+      - REDIS_QUEUE_PORT=${REDIS_CACHE_PORT:-6379}
+      - REDIS_RATE_LIMIT_HOST=${REDIS_CACHE_HOST:-redis}
+      - REDIS_RATE_LIMIT_PORT=${REDIS_CACHE_PORT:-6379}
+      - USE_UI_FS=${USE_UI_FS:-True}
+      - MASK_REGION=${MASK_REGION:-East Africa}
+    ports:
+      - ${APP_HOST_IP:-127.0.0.1}:${APP_HOST_PORT:-8000}:8000
+    volumes:
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/app/logs}
+      - ${CACHE_DIR:-./data/cache}:${APP_CACHE_DIR:-/opt/app/cache}
+    depends_on:
+      - redis
+
+  open-ifs:
+    image: ${API_IMAGE_NAME:-icpac/fast-cgan-api}
+    container_name: ${OPEN_IFS_JOBS_CNTR_NAME:-open-ifs-jobs}
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+      args:
+        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    command: ${OPEN_IFS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'open-ifs'}
+    environment:
+      - WORK_HOME=${WORK_HOME:-/opt/cgan}
+      - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
+    volumes:
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+
+  jurre-brishti-ens:
+    image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
+    container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-ens-jobs}
+    build:
+      context: .
+      dockerfile: jobs.Dockerfile
+      args:
+        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
+        - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
+        - GAN_BRANCH=Jurre_brishti
+        - MODEL_CONFIG=jurre-brishti.tar
+        - PYTHON_VERSION=3.10
+    restart: ${RESTART_POLICY:-unless-stopped}
+    command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti'}
+    environment:
+      - WORK_HOME=${WORK_HOME:-/opt/cgan}
+      - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
+      - IFS_SERVER_HOST=${IFS_SERVER_HOST:-domain.example}
+      - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
+      - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
+    volumes:
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${JURRE_MAIN_CONFIG:-./configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-./configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${JURRE_CGAN_FORECAST_CONFIG:-./configs/jurre-brishti/forecast-ens.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+
+  jurre-brishti-counts:
+    image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
+    container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-counts-jobs}
+    build:
+      context: .
+      dockerfile: jobs.Dockerfile
+      args:
+        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
+        - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
+        - GAN_BRANCH=Jurre_brishti
+        - MODEL_CONFIG=jurre-brishti.tar
+        - PYTHON_VERSION=3.10
+    restart: ${RESTART_POLICY:-unless-stopped}
+    command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
+    environment:
+      - WORK_HOME=${WORK_HOME:-/opt/cgan}
+      - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
+      - IFS_SERVER_HOST=${IFS_SERVER_HOST:-domain.example}
+      - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
+      - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
+    volumes:
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${JURRE_MAIN_CONFIG:-./configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-./configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${JURRE_CGAN_FORECAST_CONFIG:-./configs/jurre-brishti/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+
+  mvua-kubwa-ens:
+    image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
+    container_name: ${MVUA_ENS_JOBS_CNTR_NAME:-mvua-kubwa-ens-jobs}
+    build:
+      context: .
+      dockerfile: jobs.Dockerfile
+      args:
+        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
+        - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
+        - GAN_BRANCH=Mvua_kubwa
+        - MODEL_CONFIG=mvua-kubwa.tar
+        - PYTHON_VERSION=3.10
+    restart: ${RESTART_POLICY:-unless-stopped}
+    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa'}
+    environment:
+      - WORK_HOME=${WORK_HOME:-/opt/cgan}
+      - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
+      - IFS_SERVER_HOST=${IFS_SERVER_HOST:-domain.example}
+      - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
+      - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
+    volumes:
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${MVUA_MAIN_CONFIG:-./configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${MVUA_CGAN_DATA_PATHS_CONFIG:-./configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${MVUA_CGAN_FORECAST_CONFIG:-./configs/mvua-kubwa/forecast-ens.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+
+  mvua-kubwa-counts:
+    image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
+    container_name: ${MVUA_ENS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
+    build:
+      context: .
+      dockerfile: jobs.Dockerfile
+      args:
+        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
+        - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
+        - GAN_BRANCH=Mvua_kubwa
+        - MODEL_CONFIG=mvua-kubwa.tar
+        - PYTHON_VERSION=3.10
+    restart: ${RESTART_POLICY:-unless-stopped}
+    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
+    environment:
+      - WORK_HOME=${WORK_HOME:-/opt/cgan}
+      - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
+      - IFS_SERVER_HOST=${IFS_SERVER_HOST:-domain.example}
+      - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
+      - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
+    volumes:
+      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${MVUA_MAIN_CONFIG:-./configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${MVUA_CGAN_DATA_PATHS_CONFIG:-./configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${MVUA_CGAN_FORECAST_CONFIG:-./configs/mvua-kubwa/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro

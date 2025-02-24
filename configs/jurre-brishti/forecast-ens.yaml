@@ -1,0 +1,13 @@
+MODEL:
+  folder: "/opt/cgan/model/model-weights"
+  checkpoint: 316800
+
+INPUT:
+  folder: "/opt/cgan/forecasts/cgan-ifs-6h-ens"
+  file: "IFS_20250115_00Z.nc"
+  start_hour: 30
+  end_hour: 54
+
+OUTPUT:
+  folder: "/opt/cgan/jobs/jurre-brishti-ens"
+  ensemble_members: 50
