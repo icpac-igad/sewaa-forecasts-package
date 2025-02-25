@@ -19,15 +19,15 @@ services:
       - OPENAPI_URL=${CGAN_OPENAPI_URL:-${CGAN_API_URL:-http://localhost/api}/schema.json}
     volumes:
       - ${WEB_SITE_CONF:-./nginx/dev-site.conf}:/etc/nginx/conf.d/site.conf
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${PUBLIC_DATA_DIR:-/opt/data}
-      - ${API_CACHE_DIR:-./data/cache}:/opt/api-cache
-      - ${NGINX_SSL_CERTS:-./data/ssl-certs}:${CERTS_DIR:-/var/srv/ssl-certs}
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${PUBLIC_DATA_DIR:-/opt/data}
+      - ${API_CACHE_DIR:-${PWD}/data/cache}:/opt/api-cache
+      - ${NGINX_SSL_CERTS:-${PWD}/data/ssl-certs}:${CERTS_DIR:-/var/srv/ssl-certs}
 
   redis:
     image: redis:alpine
     container_name: ${REDIS_CNTR_NAME:-cgan-redis}
     volumes:
-      - ${REDIS_DATA_DIR:-./data/redis}:/data
+      - ${REDIS_DATA_DIR:-${PWD}/data/redis}:/data
     ports:
       - ${REDIS_CACHE_HOST:-127.0.0.1}:${REDIS_CACHE_PORT:-6379}:6379
 
@@ -62,9 +62,9 @@ services:
     ports:
       - ${APP_HOST_IP:-127.0.0.1}:${APP_HOST_PORT:-8000}:8000
     volumes:
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
-      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/app/logs}
-      - ${CACHE_DIR:-./data/cache}:${APP_CACHE_DIR:-/opt/app/cache}
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/app/logs}
+      - ${CACHE_DIR:-${PWD}/data/cache}:${APP_CACHE_DIR:-/opt/app/cache}
     depends_on:
       - redis
 
@@ -84,9 +84,9 @@ services:
       - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
     volumes:
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
-      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
-      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
 
   jurre-brishti-ens:
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
@@ -110,15 +110,15 @@ services:
       - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
       - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
     volumes:
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
-      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
-      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
-      - ${MODELS_CONFIG_DIR:-./data/models-config}/jurre-brishti:${WORK_HOME:-/opt/cgan}/model:ro
-      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
-      - ${JURRE_MAIN_CONFIG:-./configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
-      - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-./configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
-      - ${JURRE_CGAN_FORECAST_CONFIG:-./configs/jurre-brishti/forecast-ens.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
-      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-${PWD}/data/models-config}/jurre-brishti:${WORK_HOME:-/opt/cgan}/model:ro
+      - ${CGAN_LOCAL_CONFIG:-${PWD}/configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${JURRE_MAIN_CONFIG:-${PWD}/configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-${PWD}/configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${JURRE_CGAN_FORECAST_CONFIG:-${PWD}/configs/jurre-brishti/forecast-ens.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
 
   jurre-brishti-counts:
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
@@ -142,15 +142,15 @@ services:
       - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
       - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
     volumes:
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
-      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
-      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
-      - ${MODELS_CONFIG_DIR:-./data/models-config}/jurre-brishti:${WORK_HOME:-/opt/cgan}/model:ro
-      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
-      - ${JURRE_MAIN_CONFIG:-./configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
-      - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-./configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
-      - ${JURRE_CGAN_FORECAST_CONFIG:-./configs/jurre-brishti/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
-      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-${PWD}/data/models-config}/jurre-brishti:${WORK_HOME:-/opt/cgan}/model:ro
+      - ${CGAN_LOCAL_CONFIG:-${PWD}/configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${JURRE_MAIN_CONFIG:-${PWD}/configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-${PWD}/configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${JURRE_CGAN_FORECAST_CONFIG:-${PWD}/configs/jurre-brishti/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
 
   mvua-kubwa-ens:
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
@@ -174,15 +174,15 @@ services:
       - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
       - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
     volumes:
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
-      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
-      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
-      - ${MODELS_CONFIG_DIR:-./data/models-config}/mvua-kubwa:${WORK_HOME:-/opt/cgan}/model:ro
-      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
-      - ${MVUA_MAIN_CONFIG:-./configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
-      - ${MVUA_CGAN_DATA_PATHS_CONFIG:-./configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
-      - ${MVUA_CGAN_FORECAST_CONFIG:-./configs/mvua-kubwa/forecast-ens.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
-      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-${PWD}/data/models-config}/mvua-kubwa:${WORK_HOME:-/opt/cgan}/model:ro
+      - ${CGAN_LOCAL_CONFIG:-${PWD}/configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${MVUA_MAIN_CONFIG:-${PWD}/configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${MVUA_CGAN_DATA_PATHS_CONFIG:-${PWD}/configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${MVUA_CGAN_FORECAST_CONFIG:-${PWD}/configs/mvua-kubwa/forecast-ens.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
 
   mvua-kubwa-counts:
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
@@ -206,12 +206,12 @@ services:
       - IFS_SERVER_USER=${IFS_SERVER_USER:-username}
       - IFS_PRIVATE_KEY=${IFS_PRIVATE_KEY:-/srv/ssl/private.key}
     volumes:
-      - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
-      - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
-      - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
-      - ${MODELS_CONFIG_DIR:-./data/models-config}/mvua-kubwa:${WORK_HOME:-/opt/cgan}/model:ro
-      - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
-      - ${MVUA_MAIN_CONFIG:-./configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
-      - ${MVUA_CGAN_DATA_PATHS_CONFIG:-./configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
-      - ${MVUA_CGAN_FORECAST_CONFIG:-./configs/mvua-kubwa/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
-      - ${IFS_SERVER_KEY:-./data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
+      - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
+      - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
+      - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-${PWD}/data/models-config}/mvua-kubwa:${WORK_HOME:-/opt/cgan}/model:ro
+      - ${CGAN_LOCAL_CONFIG:-${PWD}/configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
+      - ${MVUA_MAIN_CONFIG:-${PWD}/configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
+      - ${MVUA_CGAN_DATA_PATHS_CONFIG:-${PWD}/configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
+      - ${MVUA_CGAN_FORECAST_CONFIG:-${PWD}/configs/mvua-kubwa/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
+      - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
