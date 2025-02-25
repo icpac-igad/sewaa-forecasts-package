@@ -18,10 +18,9 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 ## Installation  
 
 To run the docker services, one is required to install `docker` and `docker compose` for their operating system.
-
-    - Instructions on how to install docker and docker compose (both included in the Docker Desktop) on windows can be found [here](https://docs.docker.com/desktop/setup/install/windows-install/)  
-    - To install docker and docker-compose (both included in Docker Desktop) on MacOS, follow [this link](https://docs.docker.com/desktop/setup/install/mac-install/)  
-    - Linux users can either install docker engine and docker-compose binaries separately using [this link](https://docs.docker.com/engine/install/) or install Docker Desktop which includes both docker and docker-compose as described [here](https://docs.docker.com/desktop/setup/install/linux/). It is highly recommended that docker and docker-compose are installed in `rootless` mode on linux. Docker rootless installation instructions can be found [here](https://docs.docker.com/engine/security/rootless/).
+- Instructions on how to install docker and docker compose (both included in the Docker Desktop) on windows can be found [here](https://docs.docker.com/desktop/setup/install/windows-install/)  
+- To install docker and docker-compose (both included in Docker Desktop) on MacOS, follow [this link](https://docs.docker.com/desktop/setup/install/mac-install/)   
+- Linux users can either install docker engine and docker-compose binaries separately using [this link](https://docs.docker.com/engine/install/) or install Docker Desktop which includes both docker and docker-compose as described [here](https://docs.docker.com/desktop/setup/install/linux/). It is highly recommended that docker and docker-compose are installed in `rootless` mode on linux. Docker rootless installation instructions can be found [here](https://docs.docker.com/engine/security/rootless/).
   
 Once done with the installations, please confirm that `docker` and `docker-compose` was installed successfully by running below commands in your favarite commandline.   
 
@@ -32,8 +31,8 @@ If no error was reported, `docker` and `docker-compose` were properly  installed
 
 Next, download cGAN models initial conditions contained on cgan [website ftp](https://cgan.icpac.net/ftp/models-config/). if `wget` is installed, execute below commands to download the data.  
 
-> `https://cgan.icpac.net/ftp/models-config/jurre-brishti.tar.gz`
-> `https://cgan.icpac.net/ftp/models-config/mvua-kubwa.tar.gz`
+> `wget -v https://cgan.icpac.net/ftp/models-config/jurre-brishti.tar.gz`  
+> `wget -v https://cgan.icpac.net/ftp/models-config/mvua-kubwa.tar.gz`
 
 With models initial conditions data downloaded, clone this repository using `git` on your favorite commandline (git must be installed before executing below commad).  
  > `git clone https://github.com/icpac-igad/sewaa-forecasts-package.git`  
