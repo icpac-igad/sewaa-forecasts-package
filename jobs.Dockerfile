@@ -1,14 +1,11 @@
 ARG PYTHON_VERSION=3.10
 
-FROM alpine AS builder
+FROM alpine/git AS builder
 ARG API_REPO=https://github.com/icpac-igad/fast-cgan.git
-ARG MODEL_CONFIG=jurre-brishti.tar
 ARG GAN_REPO=https://github.com/jaysnm/ensemble-cgan.git
 ARG GAN_BRANCH=Jurre_brishti
 
-RUN apk update --no-cache && apk add git wget && mkdir /tmp/model-config && \
-    git clone --depth 1 ${API_REPO} /tmp/api && git clone --depth 1 -b ${GAN_BRANCH} ${GAN_REPO} /tmp/cgan && \
-    wget -v https://cgan.icpac.net/ftp/models-config/${MODEL_CONFIG} -O - | tar -xv -C /tmp/model-config
+RUN git clone --depth 1 ${API_REPO} /tmp/api && git clone --depth 1 -b ${GAN_BRANCH} ${GAN_REPO} /tmp/cgan
 
 
 FROM python:${PYTHON_VERSION}-slim AS runner
@@ -40,7 +37,6 @@ RUN cd ${WORK_HOME}/ensemble-cgan && pip install --upgrade pip && pip install --
 
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/pyproject.toml /tmp/api/poetry.lock /tmp/api/README.md ${WORK_HOME}/
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
-COPY --from=builder --chown=${USER_NAME}:root /tmp/model-config ${WORK_HOME}/model
 
 RUN cd ${WORK_HOME} && pip install --no-cache-dir -e .
 

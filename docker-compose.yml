@@ -98,7 +98,6 @@ services:
         - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
         - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
         - GAN_BRANCH=Jurre_brishti
-        - MODEL_CONFIG=jurre-brishti.tar
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti'}
@@ -114,6 +113,7 @@ services:
       - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
       - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-./data/models-config}/jurre-brishti:${WORK_HOME:-/opt/cgan}/model:ro
       - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
       - ${JURRE_MAIN_CONFIG:-./configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
       - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-./configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
@@ -130,7 +130,6 @@ services:
         - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
         - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
         - GAN_BRANCH=Jurre_brishti
-        - MODEL_CONFIG=jurre-brishti.tar
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
@@ -146,6 +145,7 @@ services:
       - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
       - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-./data/models-config}/jurre-brishti:${WORK_HOME:-/opt/cgan}/model:ro
       - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
       - ${JURRE_MAIN_CONFIG:-./configs/jurre-brishti/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
       - ${JURRE_CGAN_DATA_PAPVT_NET_IPTHS_CONFIG:-./configs/jurre-brishti/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
@@ -162,7 +162,6 @@ services:
         - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
         - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
         - GAN_BRANCH=Mvua_kubwa
-        - MODEL_CONFIG=mvua-kubwa.tar
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa'}
@@ -178,6 +177,7 @@ services:
       - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
       - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-./data/models-config}/mvua-kubwa:${WORK_HOME:-/opt/cgan}/model:ro
       - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
       - ${MVUA_MAIN_CONFIG:-./configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
       - ${MVUA_CGAN_DATA_PATHS_CONFIG:-./configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
@@ -194,7 +194,6 @@ services:
         - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
         - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
         - GAN_BRANCH=Mvua_kubwa
-        - MODEL_CONFIG=mvua-kubwa.tar
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
@@ -210,6 +209,7 @@ services:
       - ${FORECASTS_DATA_DIR:-./data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - ${JOBS_DATA_DIR:-./data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
       - ${LOGS_DIR:-./data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
+      - ${MODELS_CONFIG_DIR:-./data/models-config}/mvua-kubwa:${WORK_HOME:-/opt/cgan}/model:ro
       - ${CGAN_LOCAL_CONFIG:-./configs/local_config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/local_config.yaml:ro
       - ${MVUA_MAIN_CONFIG:-./configs/mvua-kubwa/config.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/confg.yaml:ro
       - ${MVUA_CGAN_DATA_PATHS_CONFIG:-./configs/mvua-kubwa/data_paths.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/data_paths.yaml:ro
