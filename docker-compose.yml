@@ -74,6 +74,8 @@ services:
     container_name: ${OPEN_IFS_JOBS_CNTR_NAME:-open-ifs-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${OPEN_IFS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'open-ifs'}
+    ports:
+      - 127.0.0.1:5010:5000  # this is never used. Just a place holder to prevent port assignment error.
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
