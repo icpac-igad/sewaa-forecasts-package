@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 data_volumns=("./data/logs" "./data/jobs" "./data/forecasts" "./data/cache" "")
 
@@ -10,6 +10,7 @@ if [[ $1 == "build" ]]; then
         do
             echo "setting required directory permissions on ${volume}";
             docker run -d --rm --user root --name sewaa-build -v "${volume}":/opt/vol icpac/fast-cgan-api tail -f /etc/hosts
+            sleep 2
             docker exec -it sewaa-build chown cgan:cgan /opt/vol
             docker stop sewaa-build && docker remove sewaa-build
         done

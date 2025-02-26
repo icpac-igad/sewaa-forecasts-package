@@ -15,14 +15,22 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 - `mvua-kubwa-ens` data jobs  
 - `mvua-kubwa-counts` data jobs  
 
+## Downloading source code  
+
+The code is can be dowbnloaded using `git` as follows (ensure git is installed before executing below command. Use [this link](for instructions on how to install `git` on Linux, MacOS and Wondows.) ).  
+When installing `git` on windows, `MSYS` must be enabled to add support for executing bash scripts.  
+
+> `git clone https://github.com/icpac-igad/sewaa-forecasts-package.git`  
+
 ## Installation  
 
-To run the docker services, one is required to install `docker` and `docker compose` for their operating system.
+To run the docker services, one is required to install `docker` and `docker compose` for their operating system.  
+
 - Instructions on how to install docker and docker compose (both included in the Docker Desktop) on windows can be found [here](https://docs.docker.com/desktop/setup/install/windows-install/)  
-- To install docker and docker-compose (both included in Docker Desktop) on MacOS, follow [this link](https://docs.docker.com/desktop/setup/install/mac-install/)   
+- To install docker and docker-compose (both included in Docker Desktop) on MacOS, follow [this link](https://docs.docker.com/desktop/setup/install/mac-install/)  
 - Linux users can either install docker engine and docker-compose binaries separately using [this link](https://docs.docker.com/engine/install/) or install Docker Desktop which includes both docker and docker-compose as described [here](https://docs.docker.com/desktop/setup/install/linux/). It is highly recommended that docker and docker-compose are installed in `rootless` mode on linux. Docker rootless installation instructions can be found [here](https://docs.docker.com/engine/security/rootless/).
   
-Once done with the installations, please confirm that `docker` and `docker-compose` was installed successfully by running below commands in your favarite commandline.   
+Once done with the installations, please confirm that `docker` and `docker-compose` was installed successfully by running below commands in your favarite commandline.  
 
 > `docker --version`  
 > `docker compose --version`  
@@ -55,40 +63,39 @@ With models initial conditions data downloaded, clone this repository using `git
  > `mkdir data/models-config/mvua-kubwa`  
  > `tar -xvzf /path/to/mvua-kubwa.tar.gz -C data/models-config/mvua-kubwa`  
 
- Finally, use the manager bash script to build docker images (an equivalent script will be developed for windows. This works on Linux and Mac only)  
+ Finally, use the manager bash script to build docker images. On windows, either git bash or powershell must be used to execute the script. Powershell may not work depending on how `git` was installed on windows.
 
- > `sh manager.sh build`  
+ > `bash manager.sh build`  
 
  Alternatively, the docker images can be built using docker compose as follows  
 
  > `docker compose build`  
 
-
- ## Starting docker services  
+## Starting docker services  
 
  The manager bash script can be used to start docker containers as follows  
 
- > `sh manager.sh start`  
+ > `bash manager.sh start`  
 
  This could also be achieved using docker compose as follows  
 
  > `docker compose up -d`  
 
- ## Stoping docker services  
+## Stoping docker services  
 
  The manager bash script can be used to stop docker containers as follows  
 
- > `sh manager.sh stop`  
+ > `bash manager.sh stop`  
 
  This could also be achieved using docker compose as follows  
 
  > `docker compose down`  
 
- ## cleaning up residuals and dangling docker resources  
+## cleaning up residuals and dangling docker resources  
 
 The manager bash script can be used to clean idle resources as follows  
 
- > `sh manager.sh clean`  
+ > `bash manager.sh clean`  
 
  This could also be achieved using docker as follows  
 
