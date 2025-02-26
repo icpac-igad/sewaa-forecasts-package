@@ -1,6 +1,6 @@
 # Strengthening Early Warning Systems for Anticipatory Action  
 
-A simplified package (launchpad) for getting started with SEWAA forecast products. The package is compose of several docker services managed using `docker-compose`. As such, `docker` and `docker-compose` must be installed prior to setting up the page.  
+A simplified package (launchpad) for getting started with SEWAA forecast products. The package is composed of several docker services managed using `docker-compose`. As such, `docker` and `docker-compose` must be installed prior to setting up the page.  
 
 The docker services contained here-in are enlisted on the `docker-compose.yaml` as described below.  
 
@@ -17,8 +17,7 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 
 ## Downloading source code  
 
-The code is can be dowbnloaded using `git` as follows (ensure git is installed before executing below command. Use [this link](for instructions on how to install `git` on Linux, MacOS and Wondows.) ).  
-When installing `git` on windows, `MSYS` must be enabled to add support for executing bash scripts.  
+The code can be downloaded using `git` as shown below. Ensure git is installed before executing below command. Use [this link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install `git` on Linux, MacOS and Wondows. When installing `git` on windows, `MSYS` must be enabled to add support for executing bash scripts.  
 
 > `git clone https://github.com/icpac-igad/sewaa-forecasts-package.git`  
 
@@ -37,39 +36,30 @@ Once done with the installations, please confirm that `docker` and `docker-compo
 
 If no error was reported, `docker` and `docker-compose` were properly  installed.  
 
-Next, download cGAN models initial conditions contained on cgan [website ftp](https://cgan.icpac.net/ftp/models-config/). if `wget` is installed, execute below commands to download the data.  
+ Change directory into the previously downloaded git codebase from GitHub.  
+ > `cd sewaa-forecasts-package`  
+
+ Create a directory that will be used to hold `jurre-brishti` model initialization data.  
+
+> `mkdir -p data/models-config/jurre-brishti`  
+
+ Create a directory that will be used to hold `jurre-brishti` model initialization data.  
+
+> `mkdir -p data/models-config/mvua-kubwa`  
+
+Next, download cGAN models initial conditions contained on [cgan website](https://cgan.icpac.net/ftp/models-config/). if `wget` is installed, execute below commands to download the data.  
 
 > `wget -v https://cgan.icpac.net/ftp/models-config/jurre-brishti.tar.gz`  
 > `wget -v https://cgan.icpac.net/ftp/models-config/mvua-kubwa.tar.gz`
 
-With models initial conditions data downloaded, clone this repository using `git` on your favorite commandline (git must be installed before executing below commad).  
- > `git clone https://github.com/icpac-igad/sewaa-forecasts-package.git`  
+Unzip the downloaded models initial conditiona data into the directories created  
 
- Change directory into the package codebase clonned from github.  
- > `cd sewaa-forecasts-package`  
+> `tar -xvzf jurre-brishti.tar.gz -C data/models-config/jurre-brishti`  
+> `tar -xvzf mvua-kubwa.tar.gz -C data/models-config/mvua-kubwa`  
 
- Create a `data` directory within the `sewaa-forecasts-package` directory.  
-
- > `mkdir data`  
-
- Create a `models-config` directory within the `data` directory  
-
- > `mkdir data/models-config`  
-
- Unzip previously downloaded models config data into the created `data/models-config` directory  
-
- > `mkdir data/models-config/jurre-brishti`  
- > `tar -xvzf /path/to/jurre-brishti.tar.gz -C data/models-config/jurre-brishti`  
- > `mkdir data/models-config/mvua-kubwa`  
- > `tar -xvzf /path/to/mvua-kubwa.tar.gz -C data/models-config/mvua-kubwa`  
-
- Finally, use the manager bash script to build docker images. On windows, either git bash or powershell must be used to execute the script. Powershell may not work depending on how `git` was installed on windows.
+ Finally, use the manager bash script to build docker images. On windows, use either git bash or powershell to execute the script. Powershell may not work depending on how `git` was installed on windows.
 
  > `bash manager.sh build`  
-
- Alternatively, the docker images can be built using docker compose as follows  
-
- > `docker compose build`  
 
 ## Starting docker services  
 
@@ -100,3 +90,23 @@ The manager bash script can be used to clean idle resources as follows
  This could also be achieved using docker as follows  
 
  > `docker system prune -f`  
+
+## Updating the systems  
+
+With `git`, updates can be merged into the existing project folder. This would be followed by re-building `docker` images and restarting services.  
+To pull update patches, change current directory to the directory with `sewaa-forecasts-package`; that is;
+
+> `cd /path/to/sewaa-forecasts-package`  
+> `git pull origin main`  
+
+Then rebuild images  
+
+> `bash manager.sh build`  
+
+Clean cached docker resources  
+
+> `bash manager.sh clean`  
+
+Restart docker services  
+
+> `bash manager.sh start`  
