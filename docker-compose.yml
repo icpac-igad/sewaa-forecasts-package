@@ -31,7 +31,7 @@ services:
     ports:
       - ${REDIS_CACHE_HOST:-127.0.0.1}:${REDIS_CACHE_PORT:-6379}:6379
 
-  api:
+  api: &fastcgan-build
     image: ${API_IMAGE_NAME:-icpac/fast-cgan-api}
     container_name: ${API_CNTR_NAME:-cgan-api}
     build:
@@ -69,13 +69,9 @@ services:
       - redis
 
   open-ifs:
+    <<: *fastcgan-build
     image: ${API_IMAGE_NAME:-icpac/fast-cgan-api}
     container_name: ${OPEN_IFS_JOBS_CNTR_NAME:-open-ifs-jobs}
-    build:
-      context: .
-      dockerfile: api.Dockerfile
-      args:
-        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${OPEN_IFS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'open-ifs'}
     environment:
@@ -88,7 +84,7 @@ services:
       - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
       - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/cgan/logs}
 
-  jurre-brishti-ens:
+  jurre-brishti-ens: &jurre-brishti-build
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
     container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-ens-jobs}
     build:
@@ -121,16 +117,9 @@ services:
       - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
 
   jurre-brishti-counts:
+    <<: *jurre-brishti-build
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
     container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-counts-jobs}
-    build:
-      context: .
-      dockerfile: jobs.Dockerfile
-      args:
-        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
-        - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
-        - GAN_BRANCH=Jurre_brishti
-        - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
     environment:
@@ -152,7 +141,7 @@ services:
       - ${JURRE_CGAN_FORECAST_CONFIG:-${PWD}/configs/jurre-brishti/forecast-count.yaml}:${WORK_HOME:-/opt/cgan}/ensemble-cgan/dsrnngan/forecast.yaml:ro
       - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
 
-  mvua-kubwa-ens:
+  mvua-kubwa-ens: &mvua-kubwa-build
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
     container_name: ${MVUA_ENS_JOBS_CNTR_NAME:-mvua-kubwa-ens-jobs}
     build:
@@ -185,16 +174,9 @@ services:
       - ${IFS_SERVER_KEY:-${PWD}/data/private/id_rsa.key}:${IFS_PRIVATE_KEY:-/srv/ssl/private.key}:ro
 
   mvua-kubwa-counts:
+    <<: *mvua-kubwa-build
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
     container_name: ${MVUA_ENS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
-    build:
-      context: .
-      dockerfile: jobs.Dockerfile
-      args:
-        - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
-        - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
-        - GAN_BRANCH=Mvua_kubwa
-        - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
     environment:
