@@ -91,6 +91,8 @@ The manager bash script can be used to clean idle resources as follows
 
  > `docker system prune -f`  
 
+ **NOTE**: `bash manager.sh restart` command can be used to stop running docker containers, clean idle resources, re-build the images and re-start the services. The command combines `stop`, `clean`, `build` and `start` commands.  
+
 ## Updating the systems  
 
 With `git`, updates can be merged into the existing project folder. This would be followed by re-building `docker` images and restarting services.  

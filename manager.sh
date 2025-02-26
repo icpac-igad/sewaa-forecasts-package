@@ -20,6 +20,9 @@ elif [[ $1 == "clean" ]]; then
 elif [[ $1 == "start" ]]; then
     echo "starting docker services"
     docker compose down && docker compose up -d
+elif [[ $1 == "restart" ]]; then
+    echo "stopping actively running docker containers, cleaning up residuals and rebuilding docker images"
+    docker compose down && docker system prune -f && docker compose up -d --build
 elif [[ $1 == "stop" ]]; then
     echo "gracefully shutting down docker services"
     docker compose down
