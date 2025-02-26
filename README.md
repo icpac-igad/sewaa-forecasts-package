@@ -17,7 +17,7 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 
 ## Downloading source code  
 
-The code can be downloaded using `git` as shown below. Ensure git is installed before executing below command. Use [this link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install `git` on Linux, MacOS and Wondows. When installing `git` on windows, `MSYS` must be enabled to add support for executing bash scripts.  
+The code can be downloaded using `git` as shown below. Ensure git is installed before executing below command. Use [this link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install `git` on Linux, MacOS and Windows. When installing `git` on windows, `MSYS` must be enabled to add support for executing bash scripts.  
 
 > `git clone https://github.com/icpac-igad/sewaa-forecasts-package.git`  
 
@@ -52,7 +52,7 @@ Next, download cGAN models initial conditions contained on [cgan website](https:
 > `wget -v https://cgan.icpac.net/ftp/models-config/jurre-brishti.tar.gz`  
 > `wget -v https://cgan.icpac.net/ftp/models-config/mvua-kubwa.tar.gz`
 
-Unzip the downloaded models initial conditiona data into the directories created  
+Unzip the downloaded models initial conditions data into the directories created  
 
 > `tar -xvzf jurre-brishti.tar.gz -C data/models-config/jurre-brishti`  
 > `tar -xvzf mvua-kubwa.tar.gz -C data/models-config/mvua-kubwa`  
