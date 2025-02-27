@@ -4,7 +4,7 @@ data_volumns=("./data/logs" "./data/jobs" "./data/forecasts" "./data/cache" "")
 
 if [[ $1 == "build" ]]; then
     echo "building docker images"
-    docker compose build
+    docker compose build --no-cache
     echo "preparing docker services runtime environment"
     for volume in ${data_volumns[@]};
         do
@@ -22,7 +22,7 @@ elif [[ $1 == "start" ]]; then
     docker compose down && docker compose up -d
 elif [[ $1 == "restart" ]]; then
     echo "stopping actively running docker containers, cleaning up residuals and rebuilding docker images"
-    docker compose down && docker system prune -f && docker compose up -d --build
+    docker compose down && docker system prune -f && docker compose build --no-cache && docker compose up -d
 elif [[ $1 == "stop" ]]; then
     echo "gracefully shutting down docker services"
     docker compose down
