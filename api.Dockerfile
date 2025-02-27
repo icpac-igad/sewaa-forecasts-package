@@ -16,7 +16,7 @@ ARG GROUP_ID=1000
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends git rsync ssh ca-certificates pkg-config \
     libgdal-dev libgeos-dev libproj-dev gdal-bin libcgal-dev libxml2-dev libsqlite3-dev  \
-    gcc g++ dvipng libfontconfig-dev libjpeg-dev libspng-dev libx11-dev libgbm-dev git \
+    gcc g++ dvipng libfontconfig-dev libjpeg-dev libspng-dev libx11-dev libgbm-dev \
     libeccodes-dev libeccodes-tools && mkdir -p ${WORK_HOME}/.local/bin 
 
 RUN groupadd --gid ${GROUP_ID} ${USER_NAME} && \
@@ -29,6 +29,6 @@ WORKDIR ${WORK_HOME}
 COPY --from=builder --chown=${USER_ID}:root /tmp/api/README.md /tmp/api/pyproject.toml /tmp/api/poetry.lock ${WORK_HOME}/
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 ENV PATH=${WORK_HOME}/.local/bin:${PATH}
-RUN pip install --upgrade pip && pip install --no-cache-dir -e .
+RUN pip install --upgrade pip && pip install --no-cache-dir -e . && pip install eccodes cfgrib
 
 CMD ["uvicorn", "fastcgan.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
