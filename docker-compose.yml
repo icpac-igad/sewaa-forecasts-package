@@ -81,6 +81,7 @@ services:
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
       - FORECASTS_DATA_DIR=${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - LOGS_DIR=${APP_LOGS_DIR:-/opt/cgan/logs}
+      - USE_ICPAC_IFS=${USE_ICPAC_IFS:-True}
     volumes:
       - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - ${JOBS_DATA_DIR:-${PWD}/data/jobs}:${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
