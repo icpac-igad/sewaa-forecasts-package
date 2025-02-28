@@ -98,7 +98,7 @@ services:
         - GAN_BRANCH=Jurre_brishti
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti'}
+    command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti-ens'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
@@ -155,7 +155,7 @@ services:
         - GAN_BRANCH=Mvua_kubwa
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa'}
+    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa-ens'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
