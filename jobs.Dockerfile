@@ -20,7 +20,7 @@ ARG WORK_HOME=/opt/cgan
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends git rsync ssh ca-certificates pkg-config \
     libgdal-dev libgeos-dev libproj-dev gdal-bin libcgal-dev libxml2-dev libsqlite3-dev  \
-    gcc g++ dvipng libfontconfig-dev libjpeg-dev libspng-dev libx11-dev libgbm-dev git \
+    gcc g++ dvipng libfontconfig-dev libjpeg-dev libspng-dev libx11-dev libgbm-dev \
     libeccodes-dev libeccodes-tools && mkdir -p ${WORK_HOME}/.local/bin ${WORK_HOME}/.ssh
 
 
@@ -38,6 +38,6 @@ RUN cd ${WORK_HOME}/ensemble-cgan && pip install --upgrade pip && pip install --
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/pyproject.toml /tmp/api/poetry.lock /tmp/api/README.md ${WORK_HOME}/
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 
-RUN cd ${WORK_HOME} && pip install --no-cache-dir -e .
+RUN cd ${WORK_HOME} && pip install --no-cache-dir -e . && pip install eccodes cfgrib && touch ${WORK_HOME}/.env
 
 CMD ["python", "fastcgan/jobs/manager.py"]
