@@ -9,5 +9,5 @@ INPUT:
   end_hour: 174
 
 OUTPUT:
-  folder: "/opt/cgan/jobs/mvua-kubwa-ens"
+  folder: "/opt/cgan/jobs/mvua-kubwa-count"
   ensemble_members: 1000
