@@ -11,7 +11,7 @@ if [[ $1 == "build" ]]; then
             echo "setting required directory permissions on ${volume}";
             docker run -d --user root --name sewaa-build -v ./data/logs:/opt/vol icpac/fast-cgan-api tail -f /etc/hosts
             sleep 1
-            docker exec -it sewaa-build chown cgan:cgan /opt/vol
+            docker exec -it sewaa-build chown cgan:root /opt/vol
             docker stop sewaa-build && docker remove sewaa-build
         done
 elif [[ $1 == "clean" ]]; then
