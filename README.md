@@ -15,26 +15,42 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 - `mvua-kubwa-ens` data jobs  
 - `mvua-kubwa-counts` data jobs  
 
-## Downloading source code  
+## Pre-requisite Setup Dependencies  
+
+This project relies on `docker`, `docker-compose` and `git` to work. In addition, `wget` and `tar` are required for **express** users. Users installing the package manually do not necessarily require `wget` and `tar`.
+
+### Installing Docker and Docker Compose  
+
+Docker and Docker Compose are cross-platform software that makes it possible to run programs on any operating system with `99%` gurantee that the program will work with no modification.  
+Docker Desktop is available for installation in `window`, `macos` and `linux`. Docker Desktop contains both `docker` and `docker compose`.  
+On `linux`, docker and `docker compose` can be installed manually in `daemon` mode.  
+
+- Instructions on how to install Docker Desktop on windows can be found [here](https://docs.docker.com/desktop/setup/install/windows-install/)  
+- To install Docker Desktop on MacOS, follow [this link](https://docs.docker.com/desktop/setup/install/mac-install/)  
+- Linux users can either install `docker engine` and `docker-compose` binaries separately using [this link](https://docs.docker.com/engine/install/) or install Docker Desktop as described [here](https://docs.docker.com/desktop/setup/install/linux/). It is highly recommended that docker and docker-compose are installed in `rootless` mode on linux. Docker rootless installation instructions can be found [here](https://docs.docker.com/engine/security/rootless/).
+  
+Once done with the installations, please confirm that `docker` and `docker-compose` was installed successfully by running below commands in your favarite commandline.  
+
+> `docker version`  
+> `docker compose version`
+
+### Downloading source code  
 
 The code can be downloaded using `git` as shown below. Ensure git is installed before executing below command. Use [this link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install `git` on Linux, MacOS and Windows. When installing `git` on windows, `MSYS` must be enabled to add support for executing bash scripts.  
 
 > `git clone https://github.com/icpac-igad/sewaa-forecasts-package.git`  
 
-## Installation  
+## Express Installation  
 
-To run the docker services, one is required to install `docker` and `docker compose` for their operating system.  
+The package can be installed by executing a single command on `git bash` or `terminal`. To install, change `bash` or `terminal` to `sewaa-forecasts-package` previously downloaded.  
 
-- Instructions on how to install docker and docker compose (both included in the Docker Desktop) on windows can be found [here](https://docs.docker.com/desktop/setup/install/windows-install/)  
-- To install docker and docker-compose (both included in Docker Desktop) on MacOS, follow [this link](https://docs.docker.com/desktop/setup/install/mac-install/)  
-- Linux users can either install docker engine and docker-compose binaries separately using [this link](https://docs.docker.com/engine/install/) or install Docker Desktop which includes both docker and docker-compose as described [here](https://docs.docker.com/desktop/setup/install/linux/). It is highly recommended that docker and docker-compose are installed in `rootless` mode on linux. Docker rootless installation instructions can be found [here](https://docs.docker.com/engine/security/rootless/).
-  
-Once done with the installations, please confirm that `docker` and `docker-compose` was installed successfully by running below commands in your favarite commandline.  
+> `cd sewaa-forecasts-package`  
 
-> `docker --version`  
-> `docker compose --version`  
+Then run express manager command to build docker images, download model configuration data and start docker containers.
 
-If no error was reported, `docker` and `docker-compose` were properly  installed.  
+> `bash manager.sh express`  
+
+## Advanced Installation  
 
  Change directory into the previously downloaded git codebase from GitHub.  
  > `cd sewaa-forecasts-package`  
