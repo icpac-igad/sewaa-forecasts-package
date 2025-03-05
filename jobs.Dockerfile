@@ -33,11 +33,13 @@ WORKDIR ${WORK_HOME}
 ENV PATH=${WORK_HOME}/.local/bin:$PATH
 
 COPY --from=builder --chown=${USER_NAME}:root /tmp/cgan ${WORK_HOME}/ensemble-cgan 
-RUN cd ${WORK_HOME}/ensemble-cgan && pip install --upgrade --no-cache-dir pip && pip install --no-cache-dir -e .
+
+RUN cd ${WORK_HOME}/ensemble-cgan && pip install --upgrade --no-cache-dir pip && pip install uv 
+RUN cd ${WORK_HOME}/ensemble-cgan && uv pip install -r pyproject.toml
 
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/pyproject.toml /tmp/api/poetry.lock /tmp/api/README.md ${WORK_HOME}/
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 
-RUN cd ${WORK_HOME} && pip install --no-cache-dir -e . && touch ${WORK_HOME}/.env
+RUN cd ${WORK_HOME} && uv pip install -r pyproject.toml && touch ${WORK_HOME}/.env
 
 CMD ["python", "fastcgan/jobs/manager.py"]
