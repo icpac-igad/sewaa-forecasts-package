@@ -29,6 +29,6 @@ WORKDIR ${WORK_HOME}
 COPY --from=builder --chown=${USER_ID}:root /tmp/api/README.md /tmp/api/pyproject.toml /tmp/api/poetry.lock ${WORK_HOME}/
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 ENV PATH=${WORK_HOME}/.local/bin:${PATH}
-RUN pip install --upgrade pip && pip install --no-cache-dir -e . && pip install eccodes cfgrib && touch ${WORK_HOME}/.env
+RUN pip install --upgrade --no-cache-dir pip && pip install --no-cache-dir -e . && touch ${WORK_HOME}/.env
 
 CMD ["uvicorn", "fastcgan.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
