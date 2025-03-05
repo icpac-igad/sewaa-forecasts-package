@@ -112,9 +112,16 @@ The manager bash script can be used to clean idle resources as follows
 ## Updating the systems  
 
 With `git`, updates can be merged into the existing project folder. This would be followed by re-building `docker` images and restarting services.  
-To pull update patches, change current directory to the directory with `sewaa-forecasts-package`; that is;
+To pull update patches, change current directory to the directory with sewaa forecasts package code.  
 
 > `cd /path/to/sewaa-forecasts-package`  
+
+updates can be grabbed using a single management command `update`
+
+> `bash manager.sh update`  
+
+Alternatively, this can be manually achieved using below steps. First update the package codebase.  
+
 > `git pull origin main`  
 
 Then rebuild images  
@@ -131,4 +138,4 @@ Restart docker services
 
 ## Accessing Forecast Products  
 
-With a working setup, forecast data products will be generated and made avaiable through a website accessible at you [http://localhost](http://localhost)  
+With a working setup, forecast data products will be generated and made avaiable through a website accessible to you at [http://localhost](http://localhost)  
