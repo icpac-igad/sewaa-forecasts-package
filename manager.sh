@@ -61,27 +61,29 @@ elif [[ $1 == "reopen" ]]; then
     docker compose down
     echo "removing idle resources"
     docker system prune -f
-    echo "powering on docker containers"
+    echo "powering on docker containers and showing logs"
     docker compose up -d && docker compose logs -ft
 elif [[ $1 == "restart" ]]; then
-    echo "stopping actively running docker containers"
-    docker compose down
     echo "cleaning up residuals"
     docker system prune -f
     echo "rebuilding docker images from cache and restarting docker containers"
-    docker compose up -d --build && docker compose logs -ft
-elif [[ $1 == "update" ]]; then
+    docker compose up -d --build
     echo "stopping actively running docker containers"
     docker compose down
+    echo "cleaning up residuals and showing logs"
+    docker system prune -f && docker compose logs -ft
+elif [[ $1 == "update" ]]; then
     echo "cleaning up residuals"
     docker system prune -f
     echo "updating source codes"
     git pull origin main
     echo "rebuilding docker images and restarting docker containers"
-    docker compose build --no-cache && docker compose up -d && docker compose logs -ft
+    docker compose build --no-cache && docker compose up -d 
+    echo "cleaning up residuals and showing logs"
+    docker system prune -f && docker compose logs -ft
 elif [[ $1 == "stop" ]]; then
-    echo "gracefully shutting down docker services"
-    docker compose down
+    echo "gracefully shutting down docker services and cleaning up residuals"
+    docker compose down && docker system prune -f
 else
     echo "ERROR: valid commands are start or stop"
 fi
