@@ -128,3 +128,7 @@ Clean cached docker resources
 Restart docker services  
 
 > `bash manager.sh start`  
+
+## Accessing Forecast Products  
+
+With a working setup, forecast data products will be generated and made avaiable through a website accessible at you [http://localhost](http://localhost)  
