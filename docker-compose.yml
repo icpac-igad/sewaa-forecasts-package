@@ -37,7 +37,7 @@ services:
       dockerfile: api.Dockerfile
       args:
         - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
-    command: gunicorn fastcgan.main:app --timeout ${GUNICORN_TIMEOUT:-300} --workers ${GUNICORN_WORKERS:-8} --worker-class uvicorn.workers.UvicornWorker --bind  0.0.0.0:8000
+    command: poetry run gunicorn fastcgan.main:app --timeout ${GUNICORN_TIMEOUT:-300} --workers ${GUNICORN_WORKERS:-8} --worker-class uvicorn.workers.UvicornWorker --bind  0.0.0.0:8000
     environment:
       - BASE_URL=${API_BASE_URL:-http://127.0.0.1:8000}
       - APP_VERSION=${APP_VERSION:-0.2.0}
@@ -71,7 +71,7 @@ services:
     image: ${API_IMAGE_NAME:-icpac/fast-cgan-api}
     container_name: ${OPEN_IFS_JOBS_CNTR_NAME:-open-ifs-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${OPEN_IFS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'open-ifs'}
+    command: ${OPEN_IFS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'open-ifs'}
     ports:
       - 127.0.0.1:5010:5000  # this is never used. Just a place holder to prevent port assignment error.
     environment:
@@ -97,7 +97,7 @@ services:
         - GAN_BRANCH=Jurre_brishti
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti-ens'}
+    command: ${JURRE_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'jurre-brishti-ens'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
@@ -122,7 +122,7 @@ services:
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
     container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
+    command: ${JURRE_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
@@ -154,7 +154,7 @@ services:
         - GAN_BRANCH=Mvua_kubwa
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa-ens'}
+    command: ${MVUA_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'mvua-kubwa-ens'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
@@ -179,7 +179,7 @@ services:
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
     container_name: ${MVUA_ENS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
+    command: ${MVUA_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}

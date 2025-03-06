@@ -1,14 +1,11 @@
 #!/bin/bash
 
-data_volumns=("./data/logs" "./data/jobs" "./data/forecasts" "./data/cache" "")
-fcst_models=("jurre-brishti" "mvua-kubwa" "")
+set -e
 
-if [[ $1 == "express" ]]; then
-    echo "updating codebase"
-    git pull origin main 
-    echo "building docker images without cache"
-    docker compose build --no-cache
+# declare reusable helper functions
+set_permissions () {
     echo "preparing docker services runtime environment"
+    data_volumns=("./data/logs" "./data/jobs" "./data/forecasts" "./data/cache" "")
     for volume in ${data_volumns[@]};
         do
             # confirm data volume exists. otherwise create it.
@@ -24,6 +21,11 @@ if [[ $1 == "express" ]]; then
             # stop the container and remove from docker engine cache
             docker stop sewaa-build && docker remove sewaa-build
         done
+}
+
+download_config_data () {
+    echo "downloading models weights and configuration data"
+    fcst_models=("jurre-brishti" "mvua-kubwa" "")
     for fcst_model in ${fcst_models[@]};
         do
             # confirm models-config data does not exist.
@@ -36,32 +38,17 @@ if [[ $1 == "express" ]]; then
 
             fi
         done
-    echo "starting docker containers and exposing logs on the foreground"
-    docker compose up -d && docker compose logs -ft
-elif [[ $1 == "build" ]]; then
+}
+
+
+if [[ $1 == "express" ]]; then
+    echo "updating codebase"
+    git pull origin main 
     echo "building docker images without cache"
     docker compose build --no-cache
-    echo "preparing docker services runtime environment"
-    for volume in ${data_volumns[@]};
-        do
-            echo "setting required directory permissions on ${volume}";
-            docker run -d --user root --name sewaa-build -v ./data/logs:/opt/vol icpac/fast-cgan-api tail -f /etc/hosts
-            sleep 1
-            docker exec -it sewaa-build chown cgan:root /opt/vol
-            docker stop sewaa-build && docker remove sewaa-build
-        done
-elif [[ $1 == "start" ]]; then
-    echo "starting docker services"
-    docker compose down && docker compose up -d && docker compose logs -ft
-elif [[ $1 == "clean" ]]; then
-    echo "cleaning up idle docker resources" 
-    docker system prune -f
-elif [[ $1 == "reopen" ]]; then
-    echo "stopping actively running docker containers"
-    docker compose down
-    echo "removing idle resources"
-    docker system prune -f
-    echo "powering on docker containers and showing logs"
+    set_permissions
+    download_config_data
+    echo "starting docker containers and exposing logs on the foreground"
     docker compose up -d && docker compose logs -ft
 elif [[ $1 == "restart" ]]; then
     echo "cleaning up residuals"
@@ -72,6 +59,13 @@ elif [[ $1 == "restart" ]]; then
     docker compose down
     echo "cleaning up residuals and showing logs"
     docker system prune -f && docker compose logs -ft
+elif [[ $1 == "reopen" ]]; then
+    echo "stopping actively running docker containers"
+    docker compose down
+    echo "removing idle resources"
+    docker system prune -f
+    echo "powering on docker containers and showing logs"
+    docker compose up -d && docker compose logs -ft
 elif [[ $1 == "update" ]]; then
     echo "cleaning up residuals"
     docker system prune -f
@@ -81,6 +75,17 @@ elif [[ $1 == "update" ]]; then
     docker compose build --no-cache && docker compose up -d 
     echo "cleaning up residuals and showing logs"
     docker system prune -f && docker compose logs -ft
+elif [[ $1 == "build" ]]; then
+    echo "building docker images without cache"
+    docker compose build --no-cache
+    echo "preparing docker services runtime environment"
+    set_permissions
+elif [[ $1 == "start" ]]; then
+    echo "starting docker services"
+    docker compose down && docker compose up -d && docker compose logs -ft
+elif [[ $1 == "clean" ]]; then
+    echo "cleaning up idle docker resources" 
+    docker system prune -f
 elif [[ $1 == "stop" ]]; then
     echo "gracefully shutting down docker services and cleaning up residuals"
     docker compose down && docker system prune -f

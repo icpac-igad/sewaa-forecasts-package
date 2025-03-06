@@ -21,7 +21,7 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends git rsync ssh ca-certificates pkg-config \
     libgdal-dev libgeos-dev libproj-dev gdal-bin libcgal-dev libxml2-dev libsqlite3-dev  \
     gcc g++ dvipng libfontconfig-dev libjpeg-dev libspng-dev libx11-dev libgbm-dev \
-    libeccodes-dev libeccodes-tools && ${WORK_HOME}/.ssh
+    libeccodes-dev libeccodes-tools && mkdir -p ${WORK_HOME}/.ssh 
 
 
 RUN groupadd --gid ${GROUP_ID} ${USER_NAME} && \
@@ -33,16 +33,14 @@ WORKDIR ${WORK_HOME}
 
 COPY --from=builder --chown=${USER_NAME}:root /tmp/cgan ${WORK_HOME}/ensemble-cgan 
 
-RUN python -m venv ${WORK_HOME}/.local
+ENV PATH=${WORK_HOME}/.local/bin:${PATH}
+RUN pip install --no-cache-dir --upgrade poetry
 
-ENV PATH=${WORK_HOME}/.local/bin:$PATH VIRTUAL_ENV=${WORK_HOME}/.local
-
-RUN cd ${WORK_HOME}/ensemble-cgan && pip install --upgrade --no-cache-dir pip && \ 
-    pip install uv && uv pip install -r pyproject.toml
+RUN cd ${WORK_HOME}/ensemble-cgan && poetry install
 
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/pyproject.toml /tmp/api/poetry.lock /tmp/api/README.md ${WORK_HOME}/
 COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 
-RUN cd ${WORK_HOME} && uv pip install -r pyproject.toml && touch ${WORK_HOME}/.env
+RUN cd ${WORK_HOME} && poetry install && touch ${WORK_HOME}/.env
 
-CMD ["python", "fastcgan/jobs/manager.py"]
+CMD ["poetry", "run", "python", "fastcgan/jobs/manager.py"]
