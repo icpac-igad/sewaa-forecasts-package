@@ -5,7 +5,7 @@ FROM ${GIT_IMAGE} AS builder
 ARG API_REPO=https://github.com/icpac-igad/fast-cgan.git
 ARG VIZ_REPO=https://github.com/Fenwick-Cooper/show-forecasts.git
 
-RUN git clone --depth 1 ${API_REPO} /tmp/api && git clone --depth 1 ${VIZ_REPO} /tmp/viz
+RUN git clone --depth 1 ${API_REPO} /tmp/api && git clone --depth 1 -b for-mercury ${VIZ_REPO} /tmp/viz
 
 FROM python:${PYTHON_VERSION}-slim AS runner
 
