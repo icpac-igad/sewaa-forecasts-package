@@ -3,9 +3,12 @@ ARG PYTHON_VERSION=3.10
 FROM alpine/git AS builder
 ARG API_REPO=https://github.com/icpac-igad/fast-cgan.git
 ARG GAN_REPO=https://github.com/jaysnm/ensemble-cgan.git
+ARG VIZ_REPO=https://github.com/Fenwick-Cooper/show-forecasts.git
 ARG GAN_BRANCH=Jurre_brishti
 
-RUN git clone --depth 1 ${API_REPO} /tmp/api && git clone --depth 1 -b ${GAN_BRANCH} ${GAN_REPO} /tmp/cgan
+RUN git clone --depth 1 ${API_REPO} /tmp/api && \
+    git clone --depth 1 -b ${GAN_BRANCH} ${GAN_REPO} /tmp/cgan && \
+    git clone --depth 1 -b for-mercury ${VIZ_REPO} /tmp/viz
 
 
 FROM python:${PYTHON_VERSION}-slim AS runner
@@ -32,15 +35,16 @@ USER ${USER_NAME}
 WORKDIR ${WORK_HOME}
 
 COPY --from=builder --chown=${USER_NAME}:root /tmp/cgan ${WORK_HOME}/ensemble-cgan 
+COPY --from=builder --chown=${USER_ID}:root /tmp/viz ${WORK_HOME}/show-forecasts
+COPY --from=builder --chown=${USER_NAME}:root /tmp/api/pyproject.toml /tmp/api/poetry.lock /tmp/api/README.md ${WORK_HOME}/
+COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 
 RUN python -m venv ${WORK_HOME}/.venv
 ENV PATH=${WORK_HOME}/.local/bin:${WORK_HOME}/.venv/bin:${PATH} VIRTUAL_ENV=${WORK_HOME}/.venv WORK_HOME=${WORK_HOME}
 RUN pip install --no-cache-dir --upgrade poetry && \
-    cd ${WORK_HOME}/ensemble-cgan && poetry install --all-extras
-
-COPY --from=builder --chown=${USER_NAME}:root /tmp/api/pyproject.toml /tmp/api/poetry.lock /tmp/api/README.md ${WORK_HOME}/
-COPY --from=builder --chown=${USER_NAME}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
-
-RUN cd ${WORK_HOME} && poetry install --all-extras && touch ${WORK_HOME}/.env
+    cd ${WORK_HOME}/show-forecasts && poetry install && \
+    cd ${WORK_HOME} && poetry install && \
+    cd ${WORK_HOME}/ensemble-cgan && poetry install && \
+    touch ${WORK_HOME}/.env
 
 CMD ["poetry", "run", "python", "fastcgan/jobs/manager.py"]

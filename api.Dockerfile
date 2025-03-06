@@ -27,14 +27,14 @@ RUN groupadd --gid ${GROUP_ID} ${USER_NAME} && \
 USER ${USER_NAME}
 WORKDIR ${WORK_HOME}
 
-COPY --from=builder --chown=${USER_ID}:root /tmp/viz /opt/show-forecasts
+COPY --from=builder --chown=${USER_ID}:root /tmp/viz ${WORK_HOME}/show-forecasts
 COPY --from=builder --chown=${USER_ID}:root /tmp/api/README.md /tmp/api/pyproject.toml /tmp/api/poetry.lock ${WORK_HOME}/
 COPY --from=builder --chown=${USER_ID}:root /tmp/api/fastcgan ${WORK_HOME}/fastcgan
 
 RUN python -m venv ${WORK_HOME}/.venv
 ENV PATH=${WORK_HOME}/.local/bin:${WORK_HOME}/.venv/bin:${PATH} VIRTUAL_ENV=${WORK_HOME}/.venv WORK_HOME=${WORK_HOME}
 RUN pip install --no-cache-dir --upgrade poetry && \
-    cd /opt/show-forecasts && poetry install --all-extras && \
-    poetry install --all-extras && touch ${WORK_HOME}/.env
+    cd ${WORK_HOME}/show-forecasts && poetry install && \
+    cd ${WORK_HOME} && poetry install && touch ${WORK_HOME}/.env
 
 CMD ["poetry" "run", "uvicorn", "fastcgan.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
