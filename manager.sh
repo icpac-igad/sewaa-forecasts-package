@@ -55,8 +55,6 @@ elif [[ $1 == "restart" ]]; then
     docker system prune -f
     echo "rebuilding docker images from cache and restarting docker containers"
     docker compose up -d --build
-    echo "stopping actively running docker containers"
-    docker compose down
     echo "cleaning up residuals and showing logs"
     docker system prune -f && docker compose logs -ft
 elif [[ $1 == "reopen" ]]; then
