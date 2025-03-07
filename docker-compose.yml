@@ -17,6 +17,7 @@ services:
     environment:
       - VITE_API_URL=${CGAN_API_URL:-http://localhost/api}
       - OPENAPI_URL=${CGAN_OPENAPI_URL:-${CGAN_API_URL:-http://localhost/api}/schema.json}
+      - VITE_FTP_DATA_URL=${CGAN_FTP_DATA_URL:-http://localhost/ftp/}
     volumes:
       - ${WEB_SITE_CONF:-./nginx/dev-site.conf}:/etc/nginx/conf.d/site.conf
       - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${PUBLIC_DATA_DIR:-/opt/data}
@@ -62,7 +63,7 @@ services:
     volumes:
       - ${FORECASTS_DATA_DIR:-${PWD}/data/forecasts}:${APP_FORECASTS_DATA_DIR:-/opt/cgan/forecasts}
       - ${LOGS_DIR:-${PWD}/data/logs}:${APP_LOGS_DIR:-/opt/app/logs}
-      - ${CACHE_DIR:-${PWD}/data/cache}:${APP_CACHE_DIR:-/opt/app/cache}
+      - ${API_CACHE_DIR:-${PWD}/data/cache}:${APP_CACHE_DIR:-/opt/app/cache}
     depends_on:
       - redis
 
@@ -120,7 +121,7 @@ services:
   jurre-brishti-counts:
     <<: *jurre-brishti-build
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
-    container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-counts-jobs}
+    container_name: ${JURRE_COUNTS_JOBS_CNTR_NAME:-jurre-brishti-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${JURRE_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
     environment:
@@ -177,7 +178,7 @@ services:
   mvua-kubwa-counts:
     <<: *mvua-kubwa-build
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
-    container_name: ${MVUA_ENS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
+    container_name: ${MVUA_COUNTS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${MVUA_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
     environment:
