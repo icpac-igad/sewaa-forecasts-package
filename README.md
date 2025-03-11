@@ -1,3 +1,5 @@
+[![Build and Publish Web Proxy Server to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml/badge.svg?branch=main&event=push)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml)
+
 # Strengthening Early Warning Systems for Anticipatory Action  
 
 A simplified package (launchpad) for getting started with SEWAA forecast products. The package is composed of several docker services managed using `docker-compose`. As such, `docker` and `docker-compose` must be installed prior to setting up the page.  
