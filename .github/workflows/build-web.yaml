@@ -1,4 +1,4 @@
-name: Build and Publish to DockerHub
+name: Build and Publish Web Proxy Server to DockerHub
 
 on:
   push:
@@ -48,7 +48,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/386
+          platforms: linux/amd64,linux/arm64
       
       - name: Logout of docker registry
         run: docker logout
