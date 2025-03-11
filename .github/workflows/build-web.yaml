@@ -18,7 +18,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.REGISTRY_USER }}/sewaa-proxy-server
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/sewaa-proxy-server
           tags: |
             ${{ secrets.GITHUB_SHA }}
             latest
@@ -34,18 +34,11 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
-      - name: Check REGISTRY_USER
-        run: echo ${{ secrets.REGISTRY_USER }}
 
-      - name: Available QEMU platforms
-        run: echo ${{ steps.qemu.outputs.platforms }}
-
-      - name: Available buildx platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
-
-      - name: Check git commit SHA
-        run: echo ${{ secrets.GITHUB_SHA }}
+      - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
 
       - name: Build and push web proxy image
         uses: docker/build-push-action@v6
@@ -55,7 +48,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64,linux/riscv64,linux/arm,linux/386
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/386
       
       - name: Logout of docker registry
         run: docker logout
