@@ -44,19 +44,19 @@ download_config_data () {
 if [[ $1 == "express" ]]; then
     echo "updating codebase"
     git pull origin main 
-    echo "building docker images without cache"
-    docker compose build --no-cache
+    echo "downloading docker images from dockerhub registry"
+    docker compose pull
     set_permissions
     download_config_data
-    echo "starting docker containers and exposing logs on the foreground"
+    echo "starting docker containers and showing logs on the foreground"
     docker compose up -d && docker compose logs -ft
 elif [[ $1 == "restart" ]]; then
-    echo "cleaning up residuals"
-    docker system prune -f
-    echo "rebuilding docker images from cache and restarting docker containers"
-    docker compose up -d --build
-    echo "cleaning up residuals and showing logs"
-    docker system prune -f && docker compose logs -ft
+    echo "updating docker images from dockerhub registry"
+    docker compose pull
+    echo "cleaning up residuals and unused resources"
+    docker system prune -f 
+    echo "starting forecasting services and showing logs"
+    docker compose down && docker compose up -d && docker compose logs -ft
 elif [[ $1 == "reopen" ]]; then
     echo "stopping actively running docker containers"
     docker compose down
@@ -74,8 +74,8 @@ elif [[ $1 == "update" ]]; then
     echo "cleaning up residuals and showing logs"
     docker system prune -f && docker compose logs -ft
 elif [[ $1 == "build" ]]; then
-    echo "building docker images without cache"
-    docker compose build --no-cache
+    echo "building docker $2 image(s) without cache"
+    docker compose build --no-cache $2
     echo "preparing docker services runtime environment"
     set_permissions
 elif [[ $1 == "start" ]]; then
