@@ -50,6 +50,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           build-args: GAN_BRANCH=Jurre_brishti
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/jurre-brishti-pipeline
+          short-description: Jurre Brishti cGAN model jobs service
       
       - name: Logout of docker registry
         run: docker logout

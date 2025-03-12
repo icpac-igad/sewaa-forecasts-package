@@ -50,6 +50,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           build-args: GAN_BRANCH=Mvua_kubwa
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/mvua-kubwa-pipeline
+          short-description: Mvua Kubwa cGAN model jobs service
       
       - name: Logout of docker registry
         run: docker logout

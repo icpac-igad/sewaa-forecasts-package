@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - nginx/**
+      - configs/**
+      - .github/workflow/**
+      - api.Dockerfile
+      - web.Dockerfile
+      - jobs.Dockerfile
+      - README.md
 
 jobs:
   build:
@@ -49,6 +57,14 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/fast-cgan-api
+          short-description: cGAN forecasts visualization API Service
       
       - name: Logout of docker registry
         run: docker logout

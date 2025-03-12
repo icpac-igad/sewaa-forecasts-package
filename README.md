@@ -1,5 +1,3 @@
-[![Build and Publish Web Proxy Server to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml/badge.svg?branch=main&event=push)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml)
-
 # Strengthening Early Warning Systems for Anticipatory Action  
 
 A simplified package (launchpad) for getting started with SEWAA forecast products. The package is composed of several docker services managed using `docker-compose`. As such, `docker` and `docker-compose` must be installed prior to setting up the page.  
@@ -16,6 +14,13 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 - `jurre-brishti-counts` data jobs  
 - `mvua-kubwa-ens` data jobs  
 - `mvua-kubwa-counts` data jobs  
+
+These services are managed using a CI/CD workflow which builds and publishes docker images to [DockerHub](https://hub.docker.com). Below is status badge for each workflow.  
+
+[![Build and Publish Web Proxy Server to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml/badge.svg?branch=main&event=push)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml)  
+[![Build and Publish API Service to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-api.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-api.yaml)  
+[![Build and Publish Jurre Brishti Jobs to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-jurre-brishti.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-jurre-brishti.yaml)  
+[![Build and Publish Mvua Kubwa Jobs to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-mvua-kubwa.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-mvua-kubwa.yaml)
 
 ## Pre-requisite Setup Dependencies  
 
