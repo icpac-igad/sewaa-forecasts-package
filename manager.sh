@@ -73,6 +73,11 @@ elif [[ $1 == "update" ]]; then
     docker compose build --no-cache && docker compose up -d 
     echo "cleaning up residuals and showing logs"
     docker system prune -f && docker compose logs -ft
+elif [[ $1 == "pull" ]]; then
+    echo "pulling docker images from DockerHub"
+    docker compose pull
+    echo "preparing docker services runtime environment"
+    set_permissions
 elif [[ $1 == "build" ]]; then
     echo "building docker $2 image(s) without cache"
     docker compose build --no-cache $2
