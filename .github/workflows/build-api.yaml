@@ -46,7 +46,7 @@ jobs:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
         with:
-          ref: 'main'
+          ref: main
 
       - name: Build and push web proxy image
         uses: docker/build-push-action@v6
@@ -62,9 +62,10 @@ jobs:
         uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/fast-cgan-api
           short-description: cGAN forecasts visualization API Service
+          enable-url-completion: true
       
       - name: Logout of docker registry
         run: docker logout

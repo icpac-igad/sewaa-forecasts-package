@@ -54,9 +54,10 @@ jobs:
         uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/sewaa-proxy-server
           short-description: Web Server Proxy Service for cGAN website
+          enable-url-completion: true
       
       - name: Logout of docker registry
         run: docker logout
