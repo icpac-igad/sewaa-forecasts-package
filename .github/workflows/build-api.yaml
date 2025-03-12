@@ -4,14 +4,11 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - nginx/**
-    #   - configs/**
-    #   - .github/workflow/**
-    #   - api.Dockerfile
-    #   - web.Dockerfile
-    #   - jobs.Dockerfile
-    #   - README.md
+    paths:
+      - nginx/**
+      - .github/workflows/build-api.yaml
+      - api.Dockerfile
+      - README.md
 
 jobs:
   build:

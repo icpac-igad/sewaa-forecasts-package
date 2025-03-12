@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - nginx/**
+      - .github/workflows/build-web.yaml
+      - web.Dockerfile
+      - README.md
 
 jobs:
   build:
