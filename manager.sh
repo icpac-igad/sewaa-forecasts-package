@@ -11,7 +11,7 @@ set_permissions () {
             # confirm data volume exists. otherwise create it.
             if [ ! -d ${volume} ]; then
                 echo "data directory ${volume} does not exist. creating it."
-                mkdir ${volume}
+                mkdir -p ${volume}
             fi
             echo "setting required directory permissions on ${volume}";
             docker run -d --user root --name sewaa-build -v ./data/logs:/opt/vol icpac/fast-cgan-api tail -f /etc/hosts
@@ -48,8 +48,10 @@ if [[ $1 == "express" ]]; then
     docker compose pull
     set_permissions
     download_config_data
-    echo "starting docker containers and showing logs on the foreground"
-    docker compose up -d && docker compose logs -ft
+    echo "starting docker containers"
+    docker compose down && docker compose up -d
+    echo "cleaning up unused resources and showing logs on the foreground"
+    docker system prune -f && docker compose logs -ft
 elif [[ $1 == "restart" ]]; then
     echo "updating docker images from dockerhub registry"
     docker compose pull
@@ -76,12 +78,11 @@ elif [[ $1 == "update" ]]; then
 elif [[ $1 == "pull" ]]; then
     echo "pulling docker images from DockerHub"
     docker compose pull
-    echo "preparing docker services runtime environment"
-    set_permissions
 elif [[ $1 == "build" ]]; then
     echo "building docker $2 image(s) without cache"
     docker compose build --no-cache $2
-    echo "preparing docker services runtime environment"
+elif [[ $1 == "setup" ]]; then
+    echo "setting up data directory permissions"
     set_permissions
 elif [[ $1 == "start" ]]; then
     echo "starting docker services"
