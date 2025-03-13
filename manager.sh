@@ -14,7 +14,7 @@ set_permissions () {
                 mkdir -p ${volume}
             fi
             echo "setting required directory permissions on ${volume}";
-            docker run -d --user root --name sewaa-build -v ./data/logs:/opt/vol icpac/fast-cgan-api tail -f /etc/hosts
+            docker run -d --user root --name sewaa-build -v ${volume}:/opt/vol icpac/fast-cgan-api tail -f /etc/hosts
             sleep 1
             # enter the container as root user and modify data directory permissions
             docker exec -it --user root sewaa-build chown cgan:root /opt/vol
