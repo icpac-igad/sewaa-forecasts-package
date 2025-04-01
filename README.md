@@ -13,9 +13,9 @@ The docker services contained here-in are enlisted on the `docker-compose.yaml` 
 - `jurre-brishti-ens` data jobs. Responsible for six (6) hours fifty (50) ensemble member forecast generation using cGAN model.  
 - `jurre-brishti-counts` data jobs. Responsible for six (6) hours one thousand (1000) ensemble member forecast generation using cGAN model.  
 - `mvua-kubwa-ens` data jobs. Responsible for one (1) day fifty (50) ensemble member forecast generation using cGAN model.  
-- `mvua-kubwa-counts` data jobs. Responsible for one (1) hours one thousand (1000) ensemble member forecast generation using cGAN model.  
+- `mvua-kubwa-counts` data jobs. Responsible for one (1) day one thousand (1000) ensemble member forecast generation using cGAN model.  
 
-These services are managed using a CI/CD workflow which builds and publishes docker images to [DockerHub](https://hub.docker.com). Below is status badge for each workflow.  
+These services are managed using a CI/CD workflow which builds and publishes docker images to [DockerHub](https://hub.docker.com/u/icpac). Below is status badge for each workflow.  
 
 [![Build and Publish Web Proxy Server to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml/badge.svg?branch=main&event=push)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml)  
 [![Build and Publish API Service to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-api.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-api.yaml)  
