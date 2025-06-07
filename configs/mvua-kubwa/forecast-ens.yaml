@@ -1,5 +1,5 @@
 MODEL:
-  folder: "/opt/cgan/model/model-weights"
+  folder: "/opt/cgan/Mvua_Kubwa/model-config/model-weights"
   checkpoint: 300800
 
 INPUT:

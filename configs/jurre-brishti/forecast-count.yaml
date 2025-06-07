@@ -1,5 +1,5 @@
 MODEL:
-  folder: "/opt/cgan/model/model-weights"
+  folder: "/opt/cgan/Jurre_Brishti/model-config/model-weights"
   checkpoint: 316800
 
 INPUT:

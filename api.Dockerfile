@@ -37,4 +37,4 @@ RUN pip install --no-cache-dir --upgrade poetry && \
     cd ${WORK_HOME}/show-forecasts && poetry install && \
     cd ${WORK_HOME} && poetry install && touch ${WORK_HOME}/.env
 
-CMD ["poetry" "run", "uvicorn", "fastcgan.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["poetry", "run", "uvicorn", "fastcgan.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

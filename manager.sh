@@ -53,6 +53,8 @@ if [[ $1 == "express" ]]; then
     echo "cleaning up unused resources and showing logs on the foreground"
     docker system prune -f && docker compose logs -ft
 elif [[ $1 == "restart" ]]; then
+    echo "updating source codes"
+    git pull origin main
     echo "updating docker images from dockerhub registry"
     docker compose pull
     echo "cleaning up residuals and unused resources"

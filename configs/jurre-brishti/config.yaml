@@ -7,7 +7,7 @@ MODEL:
   padding: "reflect" # convolution padding: 'same', 'reflect', or 'symmetric'
 
 SETUP:
-  log_folder: "/opt/cgan/model/model-weights"
+  log_folder: "/opt/cgan/Jurre_Brishti/model-config/model-weights"
 
 GENERATOR:
   filters_gen: 128 # generator network width
