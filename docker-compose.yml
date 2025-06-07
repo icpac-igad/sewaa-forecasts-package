@@ -72,7 +72,7 @@ services:
     image: ${API_IMAGE_NAME:-icpac/fast-cgan-api}
     container_name: ${OPEN_IFS_JOBS_CNTR_NAME:-open-ifs-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${OPEN_IFS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'open-ifs'}
+    command: ${OPEN_IFS_JOBS_CMD:-python fastcgan/jobs/open_ifs.py}
     ports:
       - 127.0.0.1:5010:5000  # this is never used. Just a place holder to prevent port assignment error.
     environment:
@@ -88,7 +88,7 @@ services:
 
   jurre-brishti-ens: &jurre-brishti-build
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
-    container_name: ${JURRE_ENS_JOBS_CNTR_NAME:-jurre-brishti-ens-jobs}
+    container_name: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'jurre-brishti-ens'}
     build:
       context: .
       dockerfile: jobs.Dockerfile
@@ -123,7 +123,7 @@ services:
     image: ${JURRE_IMAGE_NAME:-icpac/jurre-brishti-pipeline}
     container_name: ${JURRE_COUNTS_JOBS_CNTR_NAME:-jurre-brishti-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${JURRE_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'jurre-brishti-count'}
+    command: ${JURRE_COUNTS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'jurre-brishti-count'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
@@ -155,7 +155,7 @@ services:
         - GAN_BRANCH=Mvua_kubwa
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${MVUA_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'mvua-kubwa-ens'}
+    command: ${MVUA_ENS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'mvua-kubwa-ens'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
@@ -180,7 +180,7 @@ services:
     image: ${MVUA_IMAGE_NAME:-icpac/mvua-kubwa-pipeline}
     container_name: ${MVUA_COUNTS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${MVUA_ENS_JOBS_CMD:-poetry run python fastcgan/jobs/manager.py -s 'mvua-kubwa-count'}
+    command: ${MVUA_COUNTS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'mvua-kubwa-ens'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}

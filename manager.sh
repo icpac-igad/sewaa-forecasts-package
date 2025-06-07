@@ -90,6 +90,9 @@ elif [[ $1 == "start" ]]; then
 elif [[ $1 == "clean" ]]; then
     echo "cleaning up idle docker resources" 
     docker system prune -f
+elif [[ $1 == "logs" ]]; then
+    echo "showing logs in the foreground"
+    docker compose logs -ft 
 elif [[ $1 == "stop" ]]; then
     echo "gracefully shutting down docker services and cleaning up residuals"
     docker compose down && docker system prune -f
