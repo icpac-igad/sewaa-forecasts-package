@@ -177,7 +177,7 @@ services:
     image: ${CGAN_IMAGE_NAME:-icpac/cgan-forecast-model}
     container_name: ${MVUA_COUNTS_JOBS_CNTR_NAME:-mvua-kubwa-counts-jobs}
     restart: ${RESTART_POLICY:-unless-stopped}
-    command: ${MVUA_COUNTS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'mvua-kubwa-ens'}
+    command: ${MVUA_COUNTS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'mvua-kubwa-count'}
     environment:
       - WORK_HOME=${WORK_HOME:-/opt/cgan}
       - JOBS_DATA_DIR=${APP_JOBS_DATA_DIR:-/opt/cgan/jobs}
