@@ -18,19 +18,19 @@ AOPP:
 
 COURSE:
   GENERAL:
-    TRUTH_PATH: "/opt/cgan/model/IMERG"
+    TRUTH_PATH: "/opt/cgan/Jurre_Brishti/model-config/IMERG"
     FORECAST_PATH: "/opt/cgan/forecasts/cgan-ifs-6h-ens"
-    CONSTANTS_PATH: "/opt/cgan/model/constants"
+    CONSTANTS_PATH: "/opt/cgan/Jurre_Brishti/model-config/constants"
 
   TFRecords:
-    tfrecords_path: "/opt/cgan/model/tfrecords"
+    tfrecords_path: "/opt/cgan/Jurre_Brishti/model-config/tfrecords"
 
 OPERATIONAL:
   GENERAL:
-    TRUTH_PATH: "/opt/cgan/model/IMERG"
+    TRUTH_PATH: "/opt/cgan/Jurre_Brishti/model/IMERG"
     FORECAST_PATH: "/opt/cgan/forecasts/cgan-ifs-6h-ens"
-    CONSTANTS_PATH: "/opt/cgan/model/constants"
-    NORMALISATION_PATH: "/opt/cgan/model/constants"
+    CONSTANTS_PATH: "/opt/cgan/Jurre_Brishti/model-config/constants"
+    NORMALISATION_PATH: "/opt/cgan/Jurre_Brishti/model-config/constants"
 
   TFRecords:
-    tfrecords_path: "/opt/cgan/model/tfrecords"
+    tfrecords_path: "/opt/cgan/Jurre_Brishti/model-config/tfrecords"
