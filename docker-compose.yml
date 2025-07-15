@@ -95,8 +95,8 @@ services:
       args:
         - API_REPO=${CGAN_API_REPO:-https://github.com/icpac-igad/fast-cgan.git}
         - GAN_REPO=${CGAN_MODEL_REPO:-https://github.com/jaysnm/ensemble-cgan.git}
-        - JURRE_DIR=${JURRE_DIR:-Jurre_Brishti}
-        - MVUA_DIR=${MVUA_DIR:-Mvua_Kubwa}
+        - JURRE_DIR=${JURRE_DIR:-Jurre_brishti}
+        - MVUA_DIR=${MVUA_DIR:-Mvua_kubwa}
         - PYTHON_VERSION=3.10
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ${JURRE_ENS_JOBS_CMD:-python fastcgan/jobs/cgan_ifs.py -m 'jurre-brishti-ens'}
