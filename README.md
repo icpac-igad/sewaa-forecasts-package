@@ -20,7 +20,7 @@ These services are managed using a CI/CD workflow which builds and publishes doc
 [![Build and Publish Web Proxy Server to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml/badge.svg?branch=main&event=push)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-web.yaml)  
 [![Build and Publish API Service to DockerHub](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-api.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-api.yaml)  
 [![Build and Publish Jurre Brishti cGAN Models Docker Image](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-jurre-brishti.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-jurre-brishti.yaml)  
-[![Build and Publish Mvua Kubwa cGAN Models Docker Image](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-mvua-kubwa.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-mvua-kubwa.yaml)
+[![Build and Publish Mvua Kubwa cGAN Models Docker Image](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-mvua-kubwa.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-mvua-kubwa.yaml)  
 [![Build and Publish Combined cGAN Models Docker Image](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-models.yaml/badge.svg?branch=main)](https://github.com/icpac-igad/sewaa-forecasts-package/actions/workflows/build-models.yaml)
 
 ## Pre-requisite Setup Dependencies  
