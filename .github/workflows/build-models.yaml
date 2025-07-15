@@ -1,4 +1,4 @@
-name: Build and Publish Jurre Brishti Jobs to DockerHub
+name: Build and Publish Combined cGAN Models Docker Image
 
 on:
   push:

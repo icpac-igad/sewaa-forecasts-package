@@ -1,4 +1,4 @@
-name: Build and Publish Mvua Kubwa Jobs to DockerHub
+name: Build and Publish Mvua Kubwa cGAN Models Docker Image
 
 on:
   push:
